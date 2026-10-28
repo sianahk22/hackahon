@@ -1,0 +1,982 @@
+<title>Le Bon Moment</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Layout : coque d'application — barre haute collante, 4 vues (quartier 3D, foyer, mairie, offres), la scène 3D comme pièce maîtresse */
+  :root {
+    --bg: #e8eeeb;
+    --surface: #fbfcfb;
+    --surface-2: #f0f4f2;
+    --ink: #13222b;
+    --muted: #586970;
+    --line: #d3ddd9;
+    --sun: #d48a00;
+    --sun-ink: #7a4d00;
+    --sun-soft: #fbeac0;
+    --grid: #0a7c87;
+    --grid-soft: #d3eef0;
+    --good: #1d8f5a;
+    --warn: #c47a00;
+    --bad: #c4433a;
+    --f-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+    --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+    --f-data: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --r: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c1316; --surface: #131c20; --surface-2: #19242a; --ink: #e4edef; --muted: #8fa0a7; --line: #25333a;
+      --sun: #ffbd36; --sun-ink: #ffd47e; --sun-soft: #3a2c0b; --grid: #46c5d0; --grid-soft: #11393e;
+      --good: #4cc98b; --warn: #f0a93a; --bad: #ef6b62; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1316; --surface: #131c20; --surface-2: #19242a; --ink: #e4edef; --muted: #8fa0a7; --line: #25333a;
+    --sun: #ffbd36; --sun-ink: #ffd47e; --sun-soft: #3a2c0b; --grid: #46c5d0; --grid-soft: #11393e;
+    --good: #4cc98b; --warn: #f0a93a; --bad: #ef6b62; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+  h1, h2, h3 { font-family: var(--f-display); letter-spacing: -0.02em; line-height: 1.1; margin: 0; text-wrap: balance; }
+  p { margin: 0; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--grid); outline-offset: 2px; }
+  .num { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); }
+  .eyebrow { font-family: var(--f-data); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------- Barre haute ---------- */
+  .top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    padding-block: 10px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .top-in { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 800; font-size: 20px; letter-spacing: -0.03em; text-decoration: none; color: var(--ink); }
+  .brand-mark { width: 34px; height: 34px; border-radius: 10px; background: var(--ink); display: grid; place-items: center; }
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; min-width: 0; }
+  .tabs a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14px; padding: 7px 12px; border-radius: 999px; }
+  .tabs a:hover { color: var(--ink); background: var(--surface-2); }
+  .tabs a[aria-current="page"] { color: var(--surface); background: var(--ink); }
+  .who { display: flex; align-items: center; gap: 8px; }
+  .who select { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; max-width: 260px; }
+
+  main { padding-block: 22px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .view { max-width: 1280px; margin: 0 auto; display: grid; gap: 18px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px 24px; flex-wrap: wrap; }
+  .head h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; }
+  .head p { max-width: 62ch; color: var(--muted); margin-top: 6px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; min-width: 0; }
+  .card h2 { font-size: 19px; font-weight: 700; }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; margin-bottom: 12px; }
+
+  /* Pastilles de scénario */
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .btn { border: 0; border-radius: 12px; padding: 10px 16px; font-weight: 700; cursor: pointer; background: var(--ink); color: var(--surface); }
+  .btn.ghost { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
+  .btn.sun { background: var(--sun); color: #1b1300; }
+
+  /* ---------- Vue quartier 3D ---------- */
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; }
+  .scene-wrap { position: relative; height: clamp(380px, 64vh, 660px); border-radius: var(--r); overflow: hidden; background: #0b1a2b; }
+  .scene-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .hud { position: absolute; top: 12px; left: 12px; display: flex; flex-wrap: wrap; gap: 6px; max-width: calc(100% - 24px); pointer-events: none; }
+  .hud span { background: rgba(8, 18, 26, .72); color: #eaf3f5; backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.12); border-radius: 10px; padding: 6px 10px; font-size: 12px; }
+  .hud b { font-family: var(--f-data); font-weight: 600; margin-left: 4px; }
+  .hud .solar b { color: #ffd166; }
+  .hud .gridin b { color: #7fe3f0; }
+  .lbl { position: absolute; left: 0; top: 0; pointer-events: none; font-size: 11px; font-weight: 700; color: #fff; background: rgba(8,18,26,.7); padding: 3px 8px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -100%); }
+  .lbl i { font-style: normal; font-family: var(--f-data); color: #ffd166; margin-left: 4px; }
+  .scene-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: #cfe0e6; text-align: center; padding: 24px; }
+
+  .controls { display: grid; gap: 14px; }
+  .timebar { display: flex; align-items: center; gap: 12px; }
+  .timebar input[type=range] { flex: 1; accent-color: var(--sun); min-width: 0; }
+  .clock { font-family: var(--f-data); font-size: 22px; font-weight: 600; min-width: 64px; }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); cursor: pointer; }
+  .switch input { width: 42px; height: 24px; appearance: none; background: var(--line); border-radius: 999px; position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0; }
+  .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); transition: transform .2s; }
+  .switch input:checked { background: var(--good); }
+  .switch input:checked::after { transform: translateX(18px); }
+  .switch b { display: block; font-size: 14px; }
+  .switch small { color: var(--muted); font-size: 12px; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .compare > div { padding: 10px 12px; border-radius: 12px; background: var(--surface-2); }
+  .compare > div.on { background: var(--grid-soft); }
+  .compare .big { font-family: var(--f-data); font-size: 24px; font-weight: 600; }
+
+  .chart svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+
+  /* Couleurs du SVG, toutes via les jetons */
+  .ax { stroke: var(--line); stroke-width: 1; }
+  .axt { fill: var(--muted); font: 11px var(--f-data); }
+  .prod-area { fill: var(--sun-soft); stroke: var(--sun); stroke-width: 2; }
+  .cons-on { fill: none; stroke: var(--grid); stroke-width: 3; stroke-linejoin: round; }
+  .cons-off { fill: none; stroke: var(--muted); stroke-width: 2; stroke-dasharray: 5 5; }
+  .cap { stroke: var(--bad); stroke-width: 1.5; stroke-dasharray: 3 4; }
+  .capt { fill: var(--bad); font: 600 11px var(--f-body); }
+  .now { stroke: var(--ink); stroke-width: 1.5; }
+  .heat-good { fill: var(--good); opacity: .55; }
+  .heat-warn { fill: var(--warn); opacity: .55; }
+  .heat-bad { fill: var(--bad); opacity: .6; }
+  .bar-auto { fill: var(--grid); }
+  .bar-remind { fill: var(--sun); }
+  .bar-ghost { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 3; }
+  .dl { stroke: var(--ink); stroke-width: 2; }
+  .dlt { fill: var(--ink); font: 600 10px var(--f-data); }
+  .rowt { fill: var(--ink); font: 600 12px var(--f-body); }
+  .sun-line { fill: var(--sun-soft); stroke: var(--sun); stroke-width: 1.5; opacity: .9; }
+
+  /* ---------- Vue foyer ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; }
+  .kpi .v { font-family: var(--f-data); font-size: 26px; font-weight: 600; margin-top: 4px; }
+  .kpi .s { font-size: 12px; color: var(--muted); }
+  .kpi.hl { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .kpi.hl .s, .kpi.hl .eyebrow { color: var(--surface); opacity: .75; }
+  .two { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px; }
+  .tasks { display: grid; gap: 10px; }
+  .task { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px; border-radius: 12px; background: var(--surface-2); }
+  .task .ic { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); }
+  .task b { display: block; }
+  .task .when { font-family: var(--f-data); font-size: 13px; }
+  .task .side { text-align: right; display: grid; gap: 4px; justify-items: end; }
+  .tag { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .tag.auto { background: var(--grid-soft); color: var(--grid); }
+  .tag.remind { background: var(--sun-soft); color: var(--sun-ink); }
+  .x { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 12px; text-decoration: underline; padding: 0; }
+  .addform { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; margin-top: 14px; }
+  .addform select { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; min-width: 0; }
+  .slider { display: grid; gap: 6px; margin-top: 4px; }
+  .slider input { accent-color: var(--grid); width: 100%; }
+  .slider .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+  .steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .steps li { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+  .steps .t { font-family: var(--f-data); font-weight: 600; }
+
+  /* ---------- Vue mairie ---------- */
+  .kv { display: grid; gap: 0; }
+  .kv > div { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .kv > div:last-child { border-bottom: 0; }
+  .kv .num { text-align: right; min-width: 84px; }
+  .kv .head-row { font-size: 12px; color: var(--muted); }
+  .good { color: var(--good); }
+  .checks { display: grid; gap: 8px; }
+  .checks label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); cursor: pointer; }
+  .checks input { accent-color: var(--grid); margin-top: 3px; }
+  .checks small { display: block; color: var(--muted); }
+  .muni { display: grid; gap: 8px; }
+  .muni div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; background: var(--surface-2); border-radius: 12px; flex-wrap: wrap; }
+  .bornes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .borne { padding: 12px; border-radius: 12px; background: var(--surface-2); }
+  .meter { height: 6px; border-radius: 3px; background: var(--line); margin-top: 8px; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: var(--sun); }
+
+  /* ---------- Vue offres ---------- */
+  .plans { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: grid; gap: 14px; align-content: start; }
+  .plan.feat { border: 2px solid var(--grid); }
+  .plan h3 { font-size: 22px; }
+  .price { font-family: var(--f-display); font-size: 30px; font-weight: 800; }
+  .price small { font-size: 14px; font-weight: 500; color: var(--muted); font-family: var(--f-body); }
+  .plan ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+  .who-pays { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+
+  footer { max-width: 1280px; margin: 0 auto; padding-block: 0 30px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); color: var(--muted); font-size: 12px; }
+
+  @media (max-width: 980px) {
+    .stage, .two { grid-template-columns: minmax(0, 1fr); }
+    .kpis, .plans { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .who-pays, .bornes { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 520px) {
+    .kpis, .plans { grid-template-columns: minmax(0, 1fr); }
+    .addform { grid-template-columns: minmax(0, 1fr); }
+    .scene-wrap { height: 380px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#quartier" aria-label="Le Bon Moment, accueil">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffbd36" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </span>
+      Le Bon Moment
+    </a>
+    <nav class="tabs" aria-label="Vues">
+      <a href="#quartier">Quartier 3D</a>
+      <a href="#foyer">Mon foyer</a>
+      <a href="#mairie">Mairie</a>
+      <a href="#offres">Offres</a>
+    </nav>
+    <div class="who">
+      <label class="eyebrow" for="user">Connecté·e</label>
+      <select id="user">
+        <option value="ines">Inès · habitante · Premium</option>
+        <option value="karim">Karim · boulangerie · Pro</option>
+        <option value="sophie">Sophie · Mairie de Montreuil</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ===================== QUARTIER 3D ===================== -->
+  <section class="view" id="v-quartier" data-view="quartier">
+    <div class="head">
+      <div>
+        <div class="eyebrow">Jumeau numérique · Quartier Croix-de-Chavaux · 30 foyers + école + boulangerie</div>
+        <h1>Le quartier consomme son propre soleil</h1>
+        <p>Les panneaux du gymnase alimentent les voisins. Le Bon Moment place les tâches flexibles de chacun au meilleur moment. Faites défiler la journée, ajoutez un nuage, coupez la coordination pour comparer.</p>
+      </div>
+      <div class="chips" role="group" aria-label="Type de journée" data-scenario-chips></div>
+    </div>
+
+    <div class="stage">
+      <div class="scene-wrap" id="scene">
+        <div class="hud" id="hud"></div>
+      </div>
+      <div class="controls">
+        <div class="card">
+          <div class="eyebrow">Heure simulée</div>
+          <div class="timebar" style="margin-top:6px">
+            <span class="clock" id="clock">13h</span>
+            <input id="t" type="range" min="0" max="47" step="1" value="10" aria-label="Heure de la journée">
+            <button class="btn ghost" id="play" type="button" aria-pressed="false">Lecture</button>
+          </div>
+        </div>
+        <label class="switch">
+          <span><b>Coordination Le Bon Moment</b><small>Planifie les tâches de tous les voisins ensemble</small></span>
+          <input type="checkbox" id="coord" checked>
+        </label>
+        <button class="btn sun" id="cloud" type="button" aria-pressed="false">Un nuage arrive entre 11h30 et 15h30</button>
+        <div class="card">
+          <div class="eyebrow" style="margin-bottom:8px">Sur la journée</div>
+          <div class="compare">
+            <div><div class="eyebrow">Sans</div><div class="big" id="tauxOff">–</div><div class="muted" style="font-size:12px">soleil consommé sur place</div></div>
+            <div class="on"><div class="eyebrow">Avec</div><div class="big" id="tauxOn">–</div><div class="muted" style="font-size:12px">soleil consommé sur place</div></div>
+            <div><div class="eyebrow">Pic sans</div><div class="big" id="peakOff">–</div><div class="muted" style="font-size:12px">sur le poste électrique</div></div>
+            <div class="on"><div class="eyebrow">Pic avec</div><div class="big" id="peakOn">–</div><div class="muted" style="font-size:12px">sur le poste électrique</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card chart">
+      <div class="card-head">
+        <h2>Production et consommation du quartier, de 8h à 8h</h2>
+        <div class="legend">
+          <span><i style="background:var(--sun)"></i>Production solaire du gymnase</span>
+          <span><i style="background:var(--grid)"></i>Avec Le Bon Moment</span>
+          <span><i style="background:var(--muted)"></i>Sans coordination</span>
+          <span><i style="background:var(--bad)"></i>Capacité du poste</span>
+        </div>
+      </div>
+      <div id="qchart"></div>
+    </div>
+  </section>
+
+  <!-- ===================== FOYER ===================== -->
+  <section class="view" id="v-foyer" data-view="foyer" hidden>
+    <div class="head">
+      <div>
+        <div class="eyebrow" id="f-eyebrow">Mon foyer</div>
+        <h1 id="f-title">Bonjour Inès</h1>
+        <p>Dites pour quand vous avez besoin de chaque chose. Le Bon Moment choisit l'heure, lance les appareils connectés et vous prévient pour les autres.</p>
+      </div>
+      <div class="chips" role="group" aria-label="Type de journée" data-scenario-chips></div>
+    </div>
+
+    <div class="kpis" id="f-kpis"></div>
+
+    <div class="two">
+      <div class="card">
+        <div class="card-head">
+          <h2>Mes besoins et leur planning</h2>
+          <span class="eyebrow">Échéance → créneau choisi</span>
+        </div>
+        <div class="tasks" id="f-tasks"></div>
+        <form class="addform" id="addform">
+          <select id="newType" aria-label="Appareil"></select>
+          <select id="newDeadline" aria-label="Échéance"></select>
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Prochaines actions</h2>
+        <ol class="steps" id="f-steps" style="margin-top:12px"></ol>
+        <div class="slider" style="margin-top:18px">
+          <label class="eyebrow" for="w">Ce qui compte pour moi</label>
+          <input id="w" type="range" min="0" max="100" value="35">
+          <div class="ends"><span>Économies</span><span>Écologie</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card chart">
+      <div class="card-head">
+        <h2>Le planning calculé</h2>
+        <div class="legend">
+          <span><i style="background:var(--good)"></i>Moment favorable</span>
+          <span><i style="background:var(--bad)"></i>Moment à éviter</span>
+          <span><i style="background:var(--grid)"></i>Lancé automatiquement</span>
+          <span><i style="background:var(--sun)"></i>Rappel envoyé</span>
+          <span><i style="background:transparent;border:1px dashed var(--muted);height:8px"></i>Habitude sans l'app</span>
+        </div>
+      </div>
+      <div id="fchart"></div>
+    </div>
+  </section>
+
+  <!-- ===================== MAIRIE ===================== -->
+  <section class="view" id="v-mairie" data-view="mairie" hidden>
+    <div class="head">
+      <div>
+        <div class="eyebrow">Espace collectivité · Opération d'autoconsommation collective</div>
+        <h1>Mairie de Montreuil : tableau de bord</h1>
+        <p>Suivez l'opération solaire du quartier, mesurez l'effet de la coordination et simulez l'arrivée de nouveaux participants.</p>
+      </div>
+      <div class="chips" role="group" aria-label="Type de journée" data-scenario-chips></div>
+    </div>
+
+    <div class="kpis" id="m-kpis"></div>
+
+    <div class="two">
+      <div class="card">
+        <div class="card-head"><h2>Bilan de la journée</h2><span class="eyebrow">Sans / avec Le Bon Moment</span></div>
+        <div class="kv" id="m-table"></div>
+      </div>
+      <div class="card">
+        <h2>Simulateur</h2>
+        <p class="muted" style="margin:6px 0 12px">Cochez pour voir l'effet sur l'opération.</p>
+        <div class="checks">
+          <label><input type="checkbox" id="sim-ecole" checked><span><b>École Jules-Ferry</b><small>Consomme en journée, quand le soleil produit</small></span></label>
+          <label><input type="checkbox" id="sim-boul" checked><span><b>Boulangerie de Karim</b><small>Fours et chambre froide dès 4h du matin</small></span></label>
+          <label><input type="checkbox" id="sim-parking"><span><b>Ombrières solaires du parking</b><small>+30 kWc de panneaux</small></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="card">
+        <div class="card-head"><h2>Bâtiments municipaux</h2><span class="eyebrow">Planifiés par le même moteur</span></div>
+        <div class="muni" id="m-muni"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Bornes publiques</h2><span class="eyebrow num" id="m-borne-time"></span></div>
+        <div class="bornes" id="m-bornes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OFFRES ===================== -->
+  <section class="view" id="v-offres" data-view="offres" hidden>
+    <div class="head">
+      <div>
+        <div class="eyebrow">Modèle économique · prix indicatifs, hypothèses à valider</div>
+        <h1>Gratuit pour les habitants, payant pour les organisations</h1>
+        <p>Les habitants utilisent l'application sans payer. Les organisateurs d'opérations solaires, les bailleurs et les villes paient, parce que chaque kWh de soleil consommé sur place leur rapporte.</p>
+      </div>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <div class="eyebrow">Habitant</div><h3>Gratuit</h3>
+        <div class="price">0 €</div>
+        <ul><li>Planning par échéance</li><li>Rappels au bon moment</li><li>2 appareils connectés</li><li>Carte du quartier</li></ul>
+      </div>
+      <div class="plan feat">
+        <div class="eyebrow">Habitant équipé</div><h3>Premium</h3>
+        <div class="price">3,99 € <small>/ mois</small></div>
+        <ul><li>Pilotage automatique illimité</li><li>Voiture électrique et borne</li><li>Curseur économies / écologie</li><li>Bilan mensuel détaillé</li></ul>
+      </div>
+      <div class="plan">
+        <div class="eyebrow">Mairies, bailleurs, coopératives</div><h3>Quartier</h3>
+        <div class="price">Par opération <small>/ an</small></div>
+        <ul><li>Coordination de tous les participants</li><li>Jumeau numérique 3D</li><li>Tableau de bord et simulateur</li><li>Application offerte aux habitants</li></ul>
+      </div>
+      <div class="plan">
+        <div class="eyebrow">Métropoles, partenaires</div><h3>Ville</h3>
+        <div class="price">Licence <small>/ an</small></div>
+        <ul><li>Bornes publiques et flottes</li><li>Bâtiments municipaux</li><li>API et marque blanche</li><li>Plusieurs quartiers</li></ul>
+      </div>
+    </div>
+    <div class="who-pays">
+      <div class="card"><div class="eyebrow">Pourquoi l'organisateur paie</div><p style="margin-top:8px">Chaque kWh solaire consommé dans le quartier évite de le revendre à bas prix. Un meilleur taux d'autoconsommation rend l'opération plus rentable.</p></div>
+      <div class="card"><div class="eyebrow">Pourquoi le bailleur paie</div><p style="margin-top:8px">Ses locataires paient moins cher leur électricité. Moins d'impayés, et un argument concret contre la précarité énergétique.</p></div>
+      <div class="card"><div class="eyebrow">Pourquoi la ville paie</div><p style="margin-top:8px">Moins de pics sur le réseau du quartier, des objectifs climat mesurables, et ses propres bâtiments pilotés par le même moteur.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>Prototype de démonstration. Quartier, consommations et production sont simulés. Seuls les prix Tempo EDF sont réels (TTC, en vigueur depuis le 1er août 2026). Prix de l'électricité solaire partagée fixé à 0,11 €/kWh pour la démo.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Temps : 48 créneaux de 30 min, de 8h aujourd'hui à 8h demain ----------
+  const SLOTS = 48;
+  const hourOf = i => (8 + i / 2) % 24;
+  const label = i => { const m = (8 * 60 + i * 30) % 1440; const h = Math.floor(m / 60); return h + 'h' + (m % 60 ? '30' : ''); };
+  const slotOfHour = h => ((h - 8 + 24) % 24) * 2; // 7h demain -> 46
+  const euro = v => v.toFixed(2).replace('.', ',') + ' €';
+  const pct = v => Math.round(v * 100) + ' %';
+  const kw = v => Math.round(v) + ' kW';
+  const ACC_PRICE = 0.11;   // prix de l'électricité solaire partagée (hypothèse de démo)
+  const CAP = 60;           // capacité du poste du quartier (démo)
+
+  function bump(h, c, w) { let d = Math.abs(h - c); d = Math.min(d, 24 - d); return Math.exp(-(d * d) / (2 * w * w)); }
+  const isHC = h => h >= 22 || h < 6;
+
+  // Tarifs Tempo réels (TTC, 1er août 2026). Courbes CO2, soleil et tension : simulées.
+  const SCENARIOS = {
+    ete:   { nom: 'Été ensoleillé', tempo: 'Jour bleu', hp: .1654, hc: .1356, sun: { peak: 1, rise: 6, set: 21.5 },
+             co2: h => 22 + 35 * bump(h, 19.5, 2) + 8 * bump(h, 8, 1.5), tension: () => 0 },
+    hiver: { nom: 'Hiver', tempo: 'Jour blanc', hp: .1921, hc: .1536, sun: { peak: .32, rise: 8.5, set: 17.3 },
+             co2: h => 40 + 55 * bump(h, 19, 1.6) + 30 * bump(h, 9, 1.6), tension: h => (h >= 8 && h < 13) ? .5 : (h >= 18 && h < 20) ? 1 : 0 },
+    rouge: { nom: 'Hiver tendu', tempo: 'Jour rouge', hp: .7295, hc: .1615, sun: { peak: .28, rise: 8.6, set: 17.2 },
+             co2: h => 55 + 75 * bump(h, 19, 1.6) + 40 * bump(h, 9, 1.6), tension: h => (h >= 6 && h < 22) ? (((h >= 8 && h < 13) || (h >= 18 && h < 20)) ? 1 : .5) : 0 },
+  };
+
+  const state = { scenario: 'ete', cloud: false, coord: true, w: .35, user: 'ines', slot: 10, tf: 10, playing: false,
+                  sim: { ecole: true, boulangerie: true, parking: false } };
+
+  function sunAt(h, sc) {
+    const { peak, rise, set } = sc.sun;
+    if (h < rise || h > set) return 0;
+    let v = peak * Math.pow(Math.sin(Math.PI * (h - rise) / (set - rise)), 1.4);
+    if (state.cloud && h >= 11.5 && h < 15.5) v *= 0.3;
+    return v;
+  }
+  function slotCtx() {
+    const sc = SCENARIOS[state.scenario];
+    return Array.from({ length: SLOTS }, (_, i) => {
+      const h = (hourOf(i) + 0.25) % 24;
+      return { h, price: isHC(h) ? sc.hc : sc.hp, co2: sc.co2(h), tension: sc.tension(h), sun: sunAt(h, sc) };
+    });
+  }
+
+  // ---------- Le moteur : optimisation sous contraintes (version gloutonne pour la démo) ----------
+  function slotScore(p, i, ctx, solar, load, o) {
+    const c = ctx[i];
+    const loc = Math.min(p, Math.max(0, solar[i]));
+    const cost = (loc * ACC_PRICE + (p - loc) * c.price) / p;
+    const co2 = ((p - loc) * c.co2) / p;
+    let s = (1 - o.w) * (cost / 0.73) + o.w * (co2 / 150) + 0.25 * c.tension;
+    if (o.cap && load[i] + p > o.cap) s += o.capW * (load[i] + p - o.cap) / p;
+    return s;
+  }
+  function plan(tasks, ctx, o) {
+    const solar = o.solar.slice(), load = o.baseLoad.slice(), out = [];
+    const order = tasks.map((_, k) => k).sort((a, b) =>
+      (tasks[a].interruptible - tasks[b].interruptible) || ((tasks[a].deadline - tasks[a].dur) - (tasks[b].deadline - tasks[b].dur)) || (tasks[b].p - tasks[a].p));
+    for (const k of order) {
+      const t = tasks[k], sc = i => slotScore(t.p, i, ctx, solar, load, o);
+      let slots;
+      if (!t.interruptible) {
+        let best = 0, bs = Infinity;
+        for (let s = 0; s + t.dur <= t.deadline; s++) {
+          let sum = 0; for (let j = s; j < s + t.dur; j++) sum += sc(j);
+          if (sum < bs - 1e-9) { bs = sum; best = s; }
+        }
+        slots = Array.from({ length: t.dur }, (_, j) => best + j);
+      } else {
+        slots = [...Array(t.deadline).keys()].sort((a, b) => sc(a) - sc(b) || a - b).slice(0, t.dur).sort((a, b) => a - b);
+      }
+      for (const i of slots) { const loc = Math.min(t.p, Math.max(0, solar[i])); solar[i] -= loc; load[i] += t.p; }
+      out[k] = slots;
+    }
+    return out;
+  }
+  const habitSlots = t => Array.from({ length: t.dur }, (_, j) => Math.min(SLOTS - 1, t.habit + j));
+  function evaluate(tasks, slotsArr, ctx, solarInit) {
+    const solar = solarInit.slice(); let cost = 0, co2 = 0, sol = 0, kwh = 0; const per = [];
+    tasks.forEach((t, k) => {
+      let c = 0, g = 0, s = 0;
+      for (const i of slotsArr[k]) {
+        const e = t.p * .5, loc = Math.min(t.p, Math.max(0, solar[i]));
+        solar[i] -= loc; const le = loc * .5, ge = e - le;
+        c += le * ACC_PRICE + ge * ctx[i].price; g += ge * ctx[i].co2; s += le; kwh += e;
+      }
+      cost += c; co2 += g; sol += s; per[k] = { cost: c, co2: g, sol: s };
+    });
+    return { cost, co2, sol, kwh, per };
+  }
+  function ranges(slots) {
+    const r = []; let a = null, b = null;
+    for (const i of slots) { if (a === null) { a = b = i; } else if (i === b + 1) { b = i; } else { r.push([a, b]); a = b = i; } }
+    if (a !== null) r.push([a, b]);
+    return r;
+  }
+  const rangeText = slots => ranges(slots).map(([a, b]) => label(a) + '–' + label(b + 1)).join(', ');
+
+  // ---------- Icônes ----------
+  const I = d => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const ICONS = {
+    voiture: I('<path d="M4 16v-3l2-5h12l2 5v3z"/><circle cx="8" cy="16.5" r="1.6"/><circle cx="16" cy="16.5" r="1.6"/><path d="M12 3l-1.5 3h3L12 9"/>'),
+    linge: I('<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6h2"/>'),
+    eau: I('<path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>'),
+    vaisselle: I('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M8 13v4M12 13v4M16 13v4"/>'),
+    secheLinge: I('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 11c1-1 2 1 3 0s2 1 3 0M9 15c1-1 2 1 3 0s2 1 3 0"/>'),
+    froid: I('<path d="M12 3v18M5 7l14 10M19 7L5 17"/>'),
+    utilitaire: I('<path d="M3 16V8h11v8M14 11h4l3 3v2h-7"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/>'),
+  };
+
+  // ---------- Appareils (puissance en kW, durée en créneaux de 30 min) ----------
+  const DEVICES = {
+    voiture:    { name: 'Voiture électrique', detail: '+20 kWh (de 30 à 70 %)', p: 3.7, dur: 11, interruptible: true, auto: true, habitH: 18.5 },
+    linge:      { name: 'Lave-linge', detail: 'Programme 40 °C', p: .8, dur: 3, interruptible: false, auto: false, habitH: 19 },
+    eau:        { name: 'Chauffe-eau', detail: 'Ballon de 200 L', p: 2.4, dur: 4, interruptible: true, auto: true, habitH: 22 },
+    vaisselle:  { name: 'Lave-vaisselle', detail: 'Programme éco', p: 1, dur: 3, interruptible: false, auto: false, habitH: 21 },
+    secheLinge: { name: 'Sèche-linge', detail: 'Pompe à chaleur', p: 1, dur: 4, interruptible: false, auto: true, habitH: 19 },
+    froid:      { name: 'Chambre froide', detail: 'Pré-refroidissement à -21 °C', p: 3, dur: 8, interruptible: true, auto: true, habitH: 16 },
+    utilitaire: { name: 'Utilitaire de livraison', detail: '+30 kWh', p: 7, dur: 9, interruptible: true, auto: true, habitH: 13 },
+  };
+  let uid = 0;
+  const mkTask = (type, deadlineH) => {
+    const d = DEVICES[type];
+    return { id: ++uid, type, ...d, deadlineH, deadline: slotOfHour(deadlineH) || SLOTS, habit: slotOfHour(d.habitH) };
+  };
+  const USERS = {
+    ines:  { name: 'Inès', role: 'Habitante · offre Premium', share: 3, base: .5, cap: 6,
+             tasks: [mkTask('voiture', 7), mkTask('linge', 22), mkTask('eau', 7), mkTask('vaisselle', 8)],
+             types: ['voiture', 'linge', 'eau', 'vaisselle', 'secheLinge'] },
+    karim: { name: 'Karim', role: 'Boulangerie · offre Pro', share: 10, base: 4, cap: 30,
+             tasks: [mkTask('froid', 18), mkTask('utilitaire', 5), mkTask('eau', 4), mkTask('vaisselle', 20)],
+             types: ['froid', 'utilitaire', 'eau', 'vaisselle'] },
+  };
+  const DEADLINES = [10, 12, 14, 16, 18, 20, 22, 0, 2, 4, 6, 7, 8];
+  const deadlineText = h => { const s = slotOfHour(h); return 'Avant ' + h + 'h' + ((s >= 32 || s === 0) ? ' demain' : ''); };
+
+  // ---------- Quartier : 30 foyers simulés (tirage déterministe) ----------
+  function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const QTASKS = (() => {
+    const r = rng(42), out = [];
+    for (let f = 0; f < 30; f++) {
+      if (f < 20) out.push({ p: 2.2, dur: 4, deadline: 46, interruptible: true, habit: 28 });
+      out.push({ p: .8, dur: 3, deadline: 46, interruptible: false, habit: 20 + Math.floor(r() * 7) });
+      if (f < 8) out.push({ p: 3.7, dur: 8, deadline: 46, interruptible: true, habit: 21 + Math.floor(r() * 3) });
+      if (f < 12) out.push({ p: 1, dur: 3, deadline: 46, interruptible: false, habit: 26 + Math.floor(r() * 3) });
+    }
+    return out;
+  })();
+
+  function quartierSim(coord) {
+    const ctx = slotCtx(), winter = state.scenario !== 'ete';
+    const kWc = 80 + (state.sim.parking ? 30 : 0);
+    const prod = ctx.map(c => kWc * .85 * c.sun);
+    const parts = ctx.map(c => {
+      const h = c.h;
+      let res = 30 * (.32 + .75 * bump(h, 20, 1.7) + .35 * bump(h, 7.5, 1)); if (winter) res *= 1.4;
+      const ecole = (state.sim.ecole && h >= 8.5 && h < 17) ? (winter ? 14 : 9) : 0;
+      const boul = state.sim.boulangerie ? ((h >= 4 && h < 19) ? 6 : 1.2) : 0;
+      return { res, ecole, boul };
+    });
+    const base = parts.map(p => p.res + p.ecole + p.boul);
+    const slots = coord
+      ? plan(QTASKS, ctx, { solar: prod.map((p, i) => Math.max(0, p - base[i])), baseLoad: base, cap: CAP, capW: 1.2, w: state.w })
+      : QTASKS.map(habitSlots);
+    const flex = Array(SLOTS).fill(0);
+    QTASKS.forEach((t, k) => slots[k].forEach(i => flex[i] += t.p));
+    const cons = base.map((b, i) => b + flex[i]);
+    let local = 0, P = 0, cost = 0, co2 = 0;
+    cons.forEach((c, i) => { const l = Math.min(c, prod[i]); local += l * .5; P += prod[i] * .5; cost += (l * ACC_PRICE + (c - l) * ctx[i].price) * .5; co2 += (c - l) * ctx[i].co2 * .5; });
+    return { ctx, prod, parts, base, flex, cons, taux: P ? local / P : 0, peak: Math.max(...cons), cost, co2, local, P };
+  }
+
+  const MUNI = [
+    { name: 'Piscine · préchauffage du bassin', p: 12, dur: 8, deadline: 46, interruptible: true },
+    { name: 'Gymnase · eau chaude des douches', p: 6, dur: 4, deadline: 22, interruptible: true },
+    { name: '4 véhicules municipaux', p: 14.8, dur: 6, deadline: 46, interruptible: true },
+  ];
+
+  // ---------- Calcul global ----------
+  function compute() {
+    state.q = { on: quartierSim(true), off: quartierSim(false) };
+    const u = USERS[state.user] || USERS.ines;
+    const ctx = state.q.on.ctx;
+    const solar = ctx.map(c => u.share * c.sun);
+    const opts = { solar, baseLoad: Array(SLOTS).fill(u.base), cap: u.cap, capW: 3, w: state.w };
+    const slots = plan(u.tasks, ctx, opts);
+    const habits = u.tasks.map(habitSlots);
+    state.f = { u, ctx, solar, opts, slots, habits, planned: evaluate(u.tasks, slots, ctx, solar), naive: evaluate(u.tasks, habits, ctx, solar) };
+    const q = state.q.on;
+    state.m = plan(MUNI, ctx, { solar: q.prod.map((p, i) => Math.max(0, p - q.cons[i])), baseLoad: q.cons, w: state.w });
+  }
+
+  // ---------- Rendu : pastilles de scénario ----------
+  function renderChips() {
+    $$('[data-scenario-chips]').forEach(g => {
+      g.innerHTML = Object.entries(SCENARIOS).map(([k, s]) =>
+        `<button type="button" class="chip" data-sc="${k}" aria-pressed="${k === state.scenario}">${s.nom} · ${s.tempo}</button>`).join('');
+    });
+  }
+
+  // ---------- Rendu : graphique du quartier ----------
+  function renderQChart() {
+    const W = 960, H = 262, pl = 46, pr = 14, pt = 26, pb = 28;
+    const { on, off } = state.q;
+    const maxY = Math.ceil(Math.max(CAP * 1.15, ...on.prod, ...off.cons, ...on.cons) / 20) * 20;
+    const x = i => pl + (W - pl - pr) * i / SLOTS, y = v => pt + (H - pt - pb) * (1 - v / maxY);
+    const line = arr => arr.map((v, i) => (i ? 'L' : 'M') + x(i + .5).toFixed(1) + ' ' + y(v).toFixed(1)).join(' ');
+    let g = '';
+    for (let v = 0; v <= maxY; v += 20) g += `<line class="ax" x1="${pl}" x2="${W - pr}" y1="${y(v)}" y2="${y(v)}"/><text class="axt" x="${pl - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+    for (let i = 0; i <= SLOTS; i += 8) g += `<text class="axt" x="${x(i)}" y="${H - 8}" text-anchor="middle">${label(i % SLOTS)}</text>`;
+    const area = `M${x(0)} ${y(0)} ` + on.prod.map((v, i) => `L${x(i + .5).toFixed(1)} ${y(v).toFixed(1)}`).join(' ') + ` L${x(SLOTS)} ${y(0)} Z`;
+    const nx = x(state.slot + .5);
+    $('#qchart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Production solaire et consommation du quartier sur 24 heures">
+      ${g}<text class="axt" x="${pl - 8}" y="12" text-anchor="end">kW</text>
+      <path class="prod-area" d="${area}"/>
+      <line class="cap" x1="${pl}" x2="${W - pr}" y1="${y(CAP)}" y2="${y(CAP)}"/>
+      <text class="capt" x="${W - pr - 4}" y="${y(CAP) - 6}" text-anchor="end">Capacité du poste · ${CAP} kW</text>
+      <path class="cons-off" d="${line(off.cons)}"/>
+      <path class="cons-on" d="${line(on.cons)}" style="opacity:${state.coord ? 1 : .35}"/>
+      <line class="now" x1="${nx}" x2="${nx}" y1="${pt}" y2="${H - pb}"/>
+    </svg>`;
+    $('#tauxOff').textContent = pct(off.taux); $('#tauxOn').textContent = pct(on.taux);
+    $('#peakOff').textContent = kw(off.peak); $('#peakOn').textContent = kw(on.peak);
+  }
+
+  function renderHUD() {
+    const q = state.coord ? state.q.on : state.q.off, i = state.slot;
+    const prod = q.prod[i], cons = q.cons[i], loc = Math.min(prod, cons);
+    $('#clock').textContent = label(i);
+    $('#t').value = i;
+    $('#hud').innerHTML = `<span>${label(i)}</span><span class="solar">Soleil<b>${kw(prod)}</b></span><span>Conso<b>${kw(cons)}</b></span>
+      <span class="solar">Local<b>${cons ? pct(loc / cons) : '–'}</b></span><span class="gridin">Réseau<b>${kw(cons - loc)}</b></span>`;
+  }
+
+  // ---------- Rendu : foyer ----------
+  function renderFoyer() {
+    const { u, ctx, slots, habits, planned, naive, solar, opts } = state.f;
+    $('#f-title').textContent = 'Bonjour ' + u.name;
+    $('#f-eyebrow').textContent = u.role + ' · ' + SCENARIOS[state.scenario].nom + ' · ' + SCENARIOS[state.scenario].tempo;
+    const okK = u.tasks.map((t, k) => slots[k].length === t.dur && Math.max(...slots[k]) < t.deadline);
+    const okN = okK.filter(Boolean).length;
+    const saved = naive.cost - planned.cost, co2 = (naive.co2 - planned.co2) / 1000, share = planned.kwh ? planned.sol / planned.kwh : 0;
+    $('#f-kpis').innerHTML = `
+      <div class="kpi hl"><div class="eyebrow">Économie du jour</div><div class="v">${euro(Math.max(0, saved))}</div><div class="s">${euro(planned.cost)} au lieu de ${euro(naive.cost)}</div></div>
+      <div class="kpi"><div class="eyebrow">CO₂ évité</div><div class="v">${co2.toFixed(2).replace('.', ',')} kg</div><div class="s">par rapport à vos habitudes</div></div>
+      <div class="kpi"><div class="eyebrow">Soleil du quartier</div><div class="v">${pct(share)}</div><div class="s">de votre énergie flexible</div></div>
+      <div class="kpi"><div class="eyebrow">Échéances tenues</div><div class="v">${okN} / ${u.tasks.length}</div><div class="s">${okN === u.tasks.length ? 'tous les besoins sont programmés' : 'une échéance est trop courte'}</div></div>`;
+
+    $('#f-tasks').innerHTML = u.tasks.map((t, k) => {
+      const d = naive.per[k].cost - planned.per[k].cost;
+      return `<div class="task">
+        <div class="ic">${ICONS[t.type]}</div>
+        <div style="min-width:0"><b>${t.name}</b><span class="muted" style="font-size:13px">${deadlineText(t.deadlineH)} · ${t.detail}</span>
+          <div class="when">${okK[k] ? rangeText(slots[k]) : 'Échéance trop courte pour ce besoin'}</div></div>
+        <div class="side"><span class="tag ${t.auto ? 'auto' : 'remind'}">${t.auto ? 'Automatique' : 'Rappel'}</span>
+          <span class="num" style="font-size:13px">${d >= 0 ? '−' : '+'}${euro(Math.abs(d))}</span>
+          <button class="x" type="button" data-del="${t.id}">Retirer</button></div>
+      </div>`;
+    }).join('') || '<p class="muted">Aucun besoin. Ajoutez-en un ci-dessous.</p>';
+
+    $('#newType').innerHTML = u.types.map(k => `<option value="${k}">${DEVICES[k].name}</option>`).join('');
+    if (!$('#newDeadline').options.length) $('#newDeadline').innerHTML = DEADLINES.map(h => `<option value="${h}">${deadlineText(h)}</option>`).join('');
+
+    const events = [];
+    u.tasks.forEach((t, k) => ranges(slots[k]).forEach(([a]) => events.push({ s: a, t })));
+    events.sort((a, b) => a.s - b.s);
+    $('#f-steps').innerHTML = events.slice(0, 6).map(e =>
+      `<li><span class="t">${label(e.s)}</span><span>${e.t.auto ? 'Démarrage automatique' : 'Rappel envoyé'} : ${e.t.name.toLowerCase()}${ctx[e.s].sun > .2 ? ', soleil du quartier' : isHC(ctx[e.s].h) ? ', heures creuses' : ''}</span></li>`).join('');
+
+    // Planning
+    const W = 960, pl = 150, pr = 14, top = 70, rowH = 36, n = u.tasks.length, H = top + n * rowH + 30;
+    const x = i => pl + (W - pl - pr) * i / SLOTS, cw = (W - pl - pr) / SLOTS;
+    const scores = ctx.map((_, i) => slotScore(1, i, ctx, solar, opts.baseLoad, { w: state.w }));
+    const sorted = scores.slice().sort((a, b) => a - b), t1 = sorted[16], t2 = sorted[32];
+    const maxSun = Math.max(.001, ...solar);
+    let s = `<text class="rowt" x="0" y="26">Soleil disponible</text><text class="rowt" x="0" y="${top - 8}">Coût du moment</text>`;
+    s += `<path class="sun-line" d="M${x(0)} 44 ${solar.map((v, i) => `L${(x(i) + cw / 2).toFixed(1)} ${(44 - 34 * v / maxSun).toFixed(1)}`).join(' ')} L${x(SLOTS)} 44 Z"/>`;
+    scores.forEach((v, i) => { s += `<rect class="${v <= t1 ? 'heat-good' : v <= t2 ? 'heat-warn' : 'heat-bad'}" x="${x(i) + .5}" y="${top - 22}" width="${cw - 1}" height="16" rx="2"/>`; });
+    u.tasks.forEach((t, k) => {
+      const yy = top + k * rowH;
+      s += `<text class="rowt" x="0" y="${yy + 21}">${t.name}</text>`;
+      ranges(habits[k]).forEach(([a, b]) => { s += `<rect class="bar-ghost" x="${x(a) + 1}" y="${yy + 6}" width="${(b - a + 1) * cw - 2}" height="22" rx="5"/>`; });
+      ranges(slots[k]).forEach(([a, b]) => { s += `<rect class="${t.auto ? 'bar-auto' : 'bar-remind'}" x="${x(a) + 1}" y="${yy + 8}" width="${(b - a + 1) * cw - 2}" height="18" rx="5"/>`; });
+      const dx = x(Math.min(t.deadline, SLOTS));
+      s += `<line class="dl" x1="${dx}" x2="${dx}" y1="${yy + 4}" y2="${yy + 30}"/><text class="dlt" x="${dx - 4}" y="${yy + 4}" text-anchor="end">${t.deadlineH}h</text>`;
+    });
+    for (let i = 0; i <= SLOTS; i += 8) s += `<text class="axt" x="${x(i)}" y="${H - 6}" text-anchor="middle">${label(i % SLOTS)}</text>`;
+    $('#fchart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Planning des appareils sur 24 heures">${s}</svg>`;
+  }
+
+  // ---------- Rendu : mairie ----------
+  function renderMairie() {
+    const { on, off } = state.q, ctx = on.ctx;
+    $('#m-kpis').innerHTML = `
+      <div class="kpi hl"><div class="eyebrow">Taux d'autoconsommation</div><div class="v">${pct(on.taux)}</div><div class="s">contre ${pct(off.taux)} sans coordination</div></div>
+      <div class="kpi"><div class="eyebrow">Pic sur le poste</div><div class="v">${kw(on.peak)}</div><div class="s">contre ${kw(off.peak)} · capacité ${CAP} kW</div></div>
+      <div class="kpi"><div class="eyebrow">Économies du quartier</div><div class="v">${euro(off.cost - on.cost)}</div><div class="s">sur cette journée</div></div>
+      <div class="kpi"><div class="eyebrow">CO₂ évité</div><div class="v">${((off.co2 - on.co2) / 1000).toFixed(1).replace('.', ',')} kg</div><div class="s">sur cette journée</div></div>`;
+    const rows = [
+      ['Production solaire', on.P.toFixed(0) + ' kWh', on.P.toFixed(0) + ' kWh'],
+      ['Soleil consommé sur place', off.local.toFixed(0) + ' kWh', on.local.toFixed(0) + ' kWh'],
+      ['Taux d\'autoconsommation', pct(off.taux), pct(on.taux)],
+      ['Pic de consommation', kw(off.peak), kw(on.peak)],
+      ['Facture du quartier', euro(off.cost), euro(on.cost)],
+    ];
+    $('#m-table').innerHTML = `<div class="head-row"><span></span><span class="num">Sans</span><span class="num">Avec</span></div>` +
+      rows.map(r => `<div><span>${r[0]}</span><span class="num muted">${r[1]}</span><span class="num good">${r[2]}</span></div>`).join('');
+    $('#m-muni').innerHTML = MUNI.map((t, k) => `<div><span>${t.name}</span><span class="num">${rangeText(state.m[k])}</span></div>`).join('');
+    const i = state.slot, loc = on.cons[i] ? Math.min(on.prod[i], on.cons[i]) / on.cons[i] : 0;
+    $('#m-borne-time').textContent = 'à ' + label(i);
+    const bornes = [['Parking de la mairie', loc, 2], ['École Jules-Ferry', loc * .92, 1], ['Place du marché', loc * .8, 3]];
+    $('#m-bornes').innerHTML = bornes.map(([n, v, free]) => `<div class="borne"><b>${n}</b><div class="muted" style="font-size:12px">${free} place${free > 1 ? 's' : ''} libre${free > 1 ? 's' : ''}</div>
+      <div class="num" style="margin-top:6px">${pct(v)} soleil local</div><div class="meter"><i style="width:${Math.round(v * 100)}%"></i></div></div>`).join('');
+  }
+
+  function renderAll() { compute(); renderChips(); renderQChart(); renderHUD(); renderFoyer(); renderMairie(); if (scene3d) scene3d.update(); }
+
+  // ---------- Navigation par ancre ----------
+  const VIEWS = ['quartier', 'foyer', 'mairie', 'offres'];
+  function route() {
+    const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'quartier';
+    $$('[data-view]').forEach(s => s.hidden = s.dataset.view !== v);
+    $$('.tabs a').forEach(a => a.getAttribute('href') === '#' + v ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+    if (v === 'quartier' && scene3d) scene3d.resize();
+  }
+  addEventListener('hashchange', route);
+
+  // ---------- Événements ----------
+  document.addEventListener('click', e => {
+    const c = e.target.closest('[data-sc]');
+    if (c) { state.scenario = c.dataset.sc; renderAll(); return; }
+    const d = e.target.closest('[data-del]');
+    if (d) { const u = USERS[state.user]; u.tasks = u.tasks.filter(t => t.id !== +d.dataset.del); renderAll(); }
+  });
+  $('#addform').addEventListener('submit', e => {
+    e.preventDefault();
+    const u = USERS[state.user]; if (!u) return;
+    u.tasks.push(mkTask($('#newType').value, +$('#newDeadline').value));
+    renderAll();
+  });
+  $('#user').addEventListener('change', e => {
+    state.user = e.target.value;
+    if (state.user === 'sophie') { location.hash = 'mairie'; state.user = 'ines'; e.target.value = 'sophie'; }
+    else { location.hash = 'foyer'; }
+    renderAll();
+  });
+  $('#t').addEventListener('input', e => { state.slot = +e.target.value; state.tf = state.slot; renderQChart(); renderHUD(); renderMairie(); if (scene3d) scene3d.update(); });
+  $('#play').addEventListener('click', e => { state.playing = !state.playing; e.target.setAttribute('aria-pressed', state.playing); e.target.textContent = state.playing ? 'Pause' : 'Lecture'; });
+  $('#coord').addEventListener('change', e => { state.coord = e.target.checked; renderQChart(); renderHUD(); if (scene3d) scene3d.update(); });
+  $('#cloud').addEventListener('click', e => { state.cloud = !state.cloud; e.target.setAttribute('aria-pressed', state.cloud); e.target.textContent = state.cloud ? 'Retirer le nuage' : 'Un nuage arrive entre 11h30 et 15h30'; renderAll(); });
+  $('#w').addEventListener('input', e => { state.w = +e.target.value / 100; renderAll(); });
+  [['#sim-ecole', 'ecole'], ['#sim-boul', 'boulangerie'], ['#sim-parking', 'parking']].forEach(([id, k]) =>
+    $(id).addEventListener('change', e => { state.sim[k] = e.target.checked; renderAll(); }));
+
+  // ---------- La scène 3D ----------
+  let scene3d = null;
+  function init3D() {
+    const wrap = $('#scene');
+    if (!window.THREE || !THREE.OrbitControls) { wrap.insertAdjacentHTML('beforeend', '<div class="scene-fallback">La vue 3D n\'a pas pu se charger. Vérifiez la connexion internet.</div>'); return null; }
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (err) { wrap.insertAdjacentHTML('beforeend', '<div class="scene-fallback">Votre navigateur ne permet pas l\'affichage 3D (WebGL).</div>'); return null; }
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    wrap.prepend(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x9fc8de, 70, 150);
+    const camera = new THREE.PerspectiveCamera(38, 1, .1, 400);
+    camera.position.set(44, 34, 48);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.target.set(0, 2, 0); controls.enablePan = false;
+    controls.maxPolarAngle = Math.PI * .44; controls.minDistance = 30; controls.maxDistance = 100;
+    controls.autoRotate = !reduced; controls.autoRotateSpeed = .35;
+
+    const hemi = new THREE.HemisphereLight(0xdcefff, 0x2f3d33, .55); scene.add(hemi);
+    const sunL = new THREE.DirectionalLight(0xfff0d0, 1.2); sunL.castShadow = true; sunL.shadow.mapSize.set(2048, 2048);
+    Object.assign(sunL.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, far: 160 }); scene.add(sunL, sunL.target);
+
+    const std = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: .85, metalness: 0, ...extra });
+    const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; scene.add(m); return m; };
+    const box = (w, h, d, mat, x, z, y = 0) => add(new THREE.BoxGeometry(w, h, d), mat, x, y + h / 2, z);
+
+    // Sol, rues, places
+    const ground = add(new THREE.PlaneGeometry(130, 130), std(0x7fa77d), 0, 0, 0); ground.rotation.x = -Math.PI / 2; ground.castShadow = false;
+    const road = std(0x4b545c), walk = std(0xc9cfc8);
+    box(130, .06, 6, road, 0, 0); box(6, .06, 130, road, 0, 0);
+    box(130, .08, 1.2, walk, 0, 3.6); box(130, .08, 1.2, walk, 0, -3.6); box(1.2, .08, 130, walk, 3.6, 0); box(1.2, .08, 130, walk, -3.6, 0);
+    for (let i = -60; i < 60; i += 5) { box(2.4, .07, .25, std(0xe8e2c8), i, 0); box(.25, .07, 2.4, std(0xe8e2c8), 0, i); }
+
+    // Matériaux des fenêtres, pilotés par la consommation
+    const winMat = { res: std(0x1b2430, { emissive: 0xffc46b }), ecole: std(0x1b2430, { emissive: 0xffd88a }), boul: std(0x1b2430, { emissive: 0xffb04a }), gym: std(0x1b2430, { emissive: 0xbfe8ff }) };
+    function windows(cx, cz, w, h, d, rows, cols, mat, y0 = 1) {
+      const g = new THREE.BoxGeometry(.9, .7, .08);
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const yy = y0 + r * ((h - y0 - .8) / Math.max(1, rows - 1 || 1));
+        const xx = cx - w / 2 + (c + .5) * (w / cols);
+        const m1 = new THREE.Mesh(g, mat); m1.position.set(xx, yy, cz + d / 2 + .05); scene.add(m1);
+        const m2 = new THREE.Mesh(g, mat); m2.position.set(xx, yy, cz - d / 2 - .05); scene.add(m2);
+      }
+    }
+
+    // Gymnase et ses panneaux solaires
+    const GYM = { x: -15, z: -15 };
+    box(16, 5, 11, std(0xd9d2c4), GYM.x, GYM.z);
+    windows(GYM.x, GYM.z, 16, 5, 11, 1, 7, winMat.gym, 2);
+    const panelMat = new THREE.MeshStandardMaterial({ color: 0x1c2e52, roughness: .35, metalness: .4, emissive: 0xffb300, emissiveIntensity: 0 });
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 6; c++) {
+      const p = add(new THREE.BoxGeometry(2.2, .12, 2.6), panelMat, GYM.x - 6.2 + c * 2.5, 5.6, GYM.z - 3 + r * 3);
+      p.rotation.x = -.35;
+    }
+    // École
+    box(13, 6, 8, std(0xe7c9a0), 15, -14); box(5, 6, 5, std(0xe7c9a0), 19.5, -8);
+    windows(15, -14, 13, 6, 8, 2, 6, winMat.ecole, 1.6);
+    box(9, .1, 4, std(0xb7a07c), 12, -7.5); // cour
+    // Boulangerie
+    box(6, 4, 5, std(0xf0e3cf), 14, 11);
+    add(new THREE.BoxGeometry(6.4, .2, 1.6), std(0xb5502f), 14, 2.9, 14.1).rotation.x = .3;
+    windows(14, 11, 6, 4, 5, 1, 3, winMat.boul, 1.6);
+    // Logements sociaux
+    box(7, 15, 7, std(0xc7ccd3), -16, 15); box(7, 11, 7, std(0xb9c0c9), -8.5, 21);
+    windows(-16, 15, 7, 15, 7, 6, 3, winMat.res, 1.4); windows(-8.5, 21, 7, 11, 7, 4, 3, winMat.res, 1.4);
+    // Maisons
+    const roofMat = std(0x9a4b3c), houseCols = [0xf2ead8, 0xe6dccb, 0xf5efe3, 0xdfe5e4];
+    const houses = [];
+    [[9, 22], [15, 22], [21, 22], [27, 22], [9, 29], [15, 29], [21, 29], [27, 29], [-26, -5], [-28, -27]].forEach(([x, z], k) => {
+      box(4, 3, 4, std(houseCols[k % 4]), x, z);
+      const roof = add(new THREE.ConeGeometry(3.2, 2, 4), roofMat, x, 4, z); roof.rotation.y = Math.PI / 4;
+      const w = new THREE.Mesh(new THREE.BoxGeometry(1, .8, .08), winMat.res); w.position.set(x, 1.6, z + 2.05); scene.add(w);
+      houses.push(new THREE.Vector3(x, 2, z));
+    });
+    // Poste électrique et pylône
+    const POSTE = new THREE.Vector3(30, 9, -28);
+    box(4, 2.5, 3, std(0x8d969c), 30, -24);
+    const pyl = std(0x6f777d, { metalness: .5, roughness: .5 });
+    add(new THREE.CylinderGeometry(.25, .7, 12, 4), pyl, 30, 6, -28);
+    add(new THREE.BoxGeometry(6, .25, .25), pyl, 30, 11, -28); add(new THREE.BoxGeometry(4.5, .25, .25), pyl, 30, 9, -28);
+    // Bornes et voitures
+    const borneMat = std(0x0e3b40, { emissive: 0x46c5d0, emissiveIntensity: .8 });
+    [[-6, -27], [-2, -27], [2, -27]].forEach(([x, z], k) => {
+      box(.6, 1.6, .6, borneMat, x, z);
+      if (k !== 1) { box(2.2, 1.1, 4, std([0x2f6fb0, 0xd6d9dc][k ? 1 : 0], { metalness: .3, roughness: .4 }), x, z + 3.2); box(1.9, .8, 2.2, std(0x22303a, { metalness: .3, roughness: .3 }), x, z + 3.2, 1.1); }
+    });
+    // Arbres
+    // Emprises au sol des bâtiments (pour ne pas planter d'arbre dedans)
+    const FOOT = [[-23, -7, -20.5, -9.5], [8.5, 21.5, -18, -10], [17, 22, -10.5, -5.5], [11, 17, 8.5, 14.5], [-19.5, -12.5, 11.5, 18.5], [-12, -5, 17.5, 24.5], [28, 32, -25.5, -22.5], [-8, 4, -28, -21],
+      ...houses.map(h => [h.x - 2.5, h.x + 2.5, h.z - 2.5, h.z + 2.5])];
+    const leaf = std(0x3f7f4a), trunk = std(0x6b4a33), rr = rng(7);
+    for (let k = 0; k < 34; k++) {
+      const side = rr() < .5 ? 1 : -1, along = (rr() - .5) * 110, alongX = rr() < .5;
+      const x = alongX ? along : side * (5.4 + rr() * .6), z = alongX ? side * (5.4 + rr() * .6) : along;
+      if (Math.abs(x) < 7 && Math.abs(z) < 7) continue;
+      if (FOOT.some(([x1, x2, z1, z2]) => x > x1 - 1.6 && x < x2 + 1.6 && z > z1 - 1.6 && z < z2 + 1.6)) continue;
+      add(new THREE.CylinderGeometry(.15, .2, 1.2, 6), trunk, x, .6, z);
+      add(new THREE.SphereGeometry(.9 + rr() * .5, 10, 8), leaf, x, 1.9, z);
+    }
+
+    // Particules d'énergie
+    const GYM_TOP = new THREE.Vector3(GYM.x, 7, GYM.z);
+    const consumers = [...houses, new THREE.Vector3(-16, 8, 15), new THREE.Vector3(-8.5, 6, 21), new THREE.Vector3(15, 5, -14), new THREE.Vector3(14, 3, 11), new THREE.Vector3(-2, 2, -27)];
+    const pGeo = new THREE.SphereGeometry(.32, 8, 8);
+    const pSun = new THREE.MeshBasicMaterial({ color: 0xffc53d }), pGrid = new THREE.MeshBasicMaterial({ color: 0x5ad1e6 });
+    const pool = []; for (let k = 0; k < 220; k++) { const m = new THREE.Mesh(pGeo, pSun); m.visible = false; scene.add(m); pool.push({ m, t: 0, a: null, b: null, c: null }); }
+    let acc = { sun: 0, grid: 0 };
+    function spawn(from, mat) {
+      const p = pool.find(o => !o.m.visible); if (!p) return;
+      const b = consumers[Math.floor(Math.random() * consumers.length)];
+      p.a = from; p.b = b; p.c = from.clone().lerp(b, .5).add(new THREE.Vector3(0, 9, 0)); p.t = 0; p.m.material = mat; p.m.visible = true;
+    }
+
+    // Labels HTML
+    const LBL = [
+      { el: null, pos: new THREE.Vector3(GYM.x, 10, GYM.z), html: () => `Gymnase solaire<i>${kw(cur().prod)}</i>` },
+      { el: null, pos: new THREE.Vector3(15, 9, -14), html: () => 'École' },
+      { el: null, pos: new THREE.Vector3(14, 7, 11), html: () => 'Boulangerie' },
+      { el: null, pos: new THREE.Vector3(-16, 18, 15), html: () => 'Logements' },
+      { el: null, pos: new THREE.Vector3(30, 14, -28), html: () => `Poste électrique<i style="color:#7fe3f0">${kw(Math.max(0, cur().cons - Math.min(cur().prod, cur().cons)))}</i>` },
+    ];
+    LBL.forEach(l => { l.el = document.createElement('div'); l.el.className = 'lbl'; wrap.appendChild(l.el); });
+
+    function cur() { const q = state.coord ? state.q.on : state.q.off, i = state.slot; return { q, i, prod: q.prod[i], cons: q.cons[i] }; }
+
+    const skyNight = new THREE.Color(0x0a1626), skyDay = new THREE.Color(0x9fd2ec), skyWinter = new THREE.Color(0xb7c6d0), tmp = new THREE.Color();
+    function update() {
+      const { q, i, prod, cons } = cur(), h = q.ctx[i].h, sc = SCENARIOS[state.scenario];
+      const day = Math.max(0, Math.sin(Math.PI * (h - sc.sun.rise) / (sc.sun.set - sc.sun.rise)));
+      const isDay = h >= sc.sun.rise && h <= sc.sun.set;
+      const dayAmt = isDay ? Math.min(1, .25 + day) : 0;
+      tmp.copy(skyNight).lerp(state.scenario === 'ete' ? skyDay : skyWinter, dayAmt * (state.cloud && h >= 11.5 && h < 15.5 ? .7 : 1));
+      renderer.setClearColor(tmp); scene.fog.color.copy(tmp);
+      const az = Math.PI * Math.min(1, Math.max(0, (h - sc.sun.rise) / (sc.sun.set - sc.sun.rise)));
+      sunL.position.set(Math.cos(az) * -60, 10 + Math.sin(az) * 50, -25);
+      sunL.intensity = isDay ? .35 + 1.1 * day * (state.scenario === 'ete' ? 1 : .6) : .08;
+      hemi.intensity = .18 + .5 * dayAmt;
+      const maxProd = Math.max(1, ...q.prod);
+      panelMat.emissiveIntensity = 1.4 * prod / maxProd;
+      const p = q.parts[i], resMax = Math.max(...q.parts.map((pp, k) => pp.res + q.flex[k]));
+      const night = 1 - dayAmt;
+      winMat.res.emissiveIntensity = .05 + (1.2 + night) * (p.res + q.flex[i]) / resMax;
+      winMat.ecole.emissiveIntensity = p.ecole ? .4 + night : .02;
+      winMat.boul.emissiveIntensity = p.boul > 2 ? .5 + night : .05;
+      winMat.gym.emissiveIntensity = .05 + .3 * night;
+      LBL.forEach(l => l.el.innerHTML = l.html());
+    }
+
+    function resize() { const r = wrap.getBoundingClientRect(); if (!r.width) return; renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); }
+    new ResizeObserver(resize).observe(wrap);
+
+    let last = performance.now();
+    const v = new THREE.Vector3();
+    function loop(now) {
+      const dt = Math.min(.05, (now - last) / 1000); last = now;
+      if (state.playing) {
+        state.tf = (state.tf + dt * 2) % SLOTS;
+        const s = Math.floor(state.tf);
+        if (s !== state.slot) { state.slot = s; renderQChart(); renderHUD(); renderMairie(); update(); }
+      }
+      if (!$('#v-quartier').hidden) {
+        const { prod, cons } = cur(), loc = Math.min(prod, cons);
+        acc.sun += loc * dt * .45; acc.grid += (cons - loc) * dt * .45;
+        while (acc.sun >= 1) { spawn(GYM_TOP, pSun); acc.sun--; }
+        while (acc.grid >= 1) { spawn(POSTE, pGrid); acc.grid--; }
+        for (const p of pool) if (p.m.visible) {
+          p.t += dt * .55; if (p.t >= 1) { p.m.visible = false; continue; }
+          const t = p.t, u = 1 - t;
+          p.m.position.set(u * u * p.a.x + 2 * u * t * p.c.x + t * t * p.b.x, u * u * p.a.y + 2 * u * t * p.c.y + t * t * p.b.y, u * u * p.a.z + 2 * u * t * p.c.z + t * t * p.b.z);
+        }
+        controls.update();
+        renderer.render(scene, camera);
+        const r = wrap.getBoundingClientRect();
+        LBL.forEach(l => {
+          v.copy(l.pos).project(camera);
+          const hide = v.z > 1;
+          l.el.style.display = hide ? 'none' : '';
+          l.el.style.transform = `translate(${((v.x + 1) / 2 * r.width).toFixed(0)}px, ${((1 - v.y) / 2 * r.height).toFixed(0)}px) translate(-50%, -100%)`;
+        });
+      }
+      requestAnimationFrame(loop);
+    }
+    resize(); requestAnimationFrame(loop);
+    return { update, resize };
+  }
+
+  // ---------- Démarrage ----------
+  compute();
+  scene3d = init3D();
+  renderAll();
+  route();
+})();
+</script>

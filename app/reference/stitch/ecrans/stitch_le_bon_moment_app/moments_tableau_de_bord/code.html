@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#727974", "surface-container-low": "#ecf6f0", "primary-fixed": "#c9ead7", "energy-pulse": "#0D9488", "inverse-surface": "#29322e", "surface-subtle": "#F5F2EB", "surface-container": "#e6f0ea", "tertiary-fixed": "#89f5e7", "outline-variant": "#c2c8c2", "error-container": "#ffdad6", "on-surface": "#151d1a", "surface-bright": "#f2fcf5", "tertiary-container": "#003a35", "on-surface-variant": "#424844", "surface": "#f2fcf5", "amber-hour": "#D97706", "on-secondary": "#ffffff", "surface-variant": "#dbe5df", "primary-fixed-dim": "#adcebc", "secondary-container": "#c5eccf", "background": "#f2fcf5", "on-secondary-fixed-variant": "#2c4e39", "primary-container": "#1b382b", "tertiary-fixed-dim": "#6bd8cb", "on-primary-container": "#82a291", "secondary-fixed-dim": "#aacfb4", "on-tertiary-container": "#38ac9f", "on-secondary-fixed": "#002110", "surface-card": "#FFFFFF", "on-secondary-container": "#4a6c55", "on-tertiary-fixed": "#00201d", "surface-container-high": "#e1eae4", "on-primary-fixed-variant": "#304d3f", "surface-container-highest": "#dbe5df", "primary": "#042217", "surface-tint": "#476556", "border-quiet": "#EAE5DB", "on-primary": "#ffffff", "secondary-fixed": "#c5eccf", "error": "#ba1a1a", "inverse-on-surface": "#e9f3ed", "tertiary": "#00231f", "on-error": "#ffffff", "on-tertiary": "#ffffff", "inverse-primary": "#adcebc", "on-tertiary-fixed-variant": "#005049", "surface-dim": "#d3dcd6", "surface-container-lowest": "#ffffff", "on-error-container": "#93000a", "secondary": "#44664f", "on-background": "#151d1a", "surface-canvas": "#FAF8F5", "on-primary-fixed": "#022015" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-mobile": "1rem", "gutter": "1.5rem", "margin": "3rem", "margin-mobile": "1.25rem", "space-md": "1rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "headline-sm": ["Newsreader"], "headline-md": ["Newsreader"], "body-sm": ["Inter"], "body-md": ["Inter"], "label-sm": ["Inter"], "headline-lg": ["Newsreader"], "display-mobile": ["Newsreader"], "headline-lg-mobile": ["Newsreader"], "title-md": ["Inter"], "body-lg": ["Newsreader"], "label-md": ["Inter"], "display": ["Newsreader"] }, "fontSize": { "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "400" }], "headline-md": ["1.75rem", { "lineHeight": "2.25rem", "fontWeight": "400" }], "body-sm": ["0.8125rem", { "lineHeight": "1.25rem", "fontWeight": "400" }], "body-md": ["0.9375rem", { "lineHeight": "1.5rem", "fontWeight": "400" }], "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.06em", "fontWeight": "500" }], "headline-lg": ["2.5rem", { "lineHeight": "3rem", "letterSpacing": "-0.015em", "fontWeight": "400" }], "display-mobile": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.01em", "fontWeight": "400" }], "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.01em", "fontWeight": "400" }], "title-md": ["1.125rem", { "lineHeight": "1.6rem", "fontWeight": "500" }], "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }], "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.04em", "fontWeight": "500" }], "display": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.02em", "fontWeight": "400" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface-canvas text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased selection:bg-secondary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-canvas/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(27,56,43,0.03)]"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">spa</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight font-normal italic leading-none">Le Bon Moment</span><span class="text-[9px] uppercase tracking-[0.2em] font-medium text-on-surface-variant/70 mt-0.5">Moments</span></div></div><div class="flex items-center gap-space-sm"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-border-quiet/60 shadow-[0_2px_6px_rgba(27,56,43,0.04)]" src="https://lh3.googleusercontent.com/aida/AEtjO1VsAE9N7FNNUub6mXFLRK55ijQva18z5dYx8r8D-9yd6quuAIXFjqsEyt9nJPhLxLcbCQIitFPykjISBwVuU3ie7HNh3gR6xJ1UMiE53nDwAs_cRLxST_YtMWENVGkIy7Y11adungVewRnU9mfd4J2eVdyR2XZYTkFDunwHempyQiMtY0zhrlQtfvVdtIWfab3oDzDQBJWUXr5MWg0gM54nOsIKgFXbQ5pl9IKShZpO66jFsHzBG-xBucY"/></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface-canvas"><div class="flex flex-col w-full px-margin-mobile gap-space-lg">
+<!-- Salutation contemplative & Note du moment -->
+<section class="flex flex-col gap-space-xs pt-space-sm">
+<div class="inline-flex items-center gap-2 text-energy-pulse">
+<span class="inline-block w-2 h-2 rounded-full bg-energy-pulse animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Réseau apaisé • 92% décarboné</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight font-normal">
+      Bonjour Camille — Le réseau est particulièrement bas carbone cet après-midi.
+    </h1>
+<p class="font-body-md text-body-md text-on-surface-variant font-normal">
+      Le souffle du vent et un ciel dégagé créent une fenêtre d'énergie pure idéale pour alléger votre empreinte.
+    </p>
+</section>
+<!-- Barre de commande façon mymind -->
+<section class="flex flex-col gap-space-sm">
+<div class="relative flex items-center bg-surface-card rounded-xl shadow-sm transition-all focus-within:shadow-md">
+<span class="material-symbols-outlined text-outline ml-4 select-none">search</span>
+<input class="w-full bg-transparent px-3 py-3.5 font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:outline-none" id="quickCommandInput" placeholder="Rechercher un équipement ou poser une question..." type="text"/>
+<button aria-label="Effacer ou action rapide" class="mr-3 p-1 rounded-full text-outline hover:text-primary transition-colors" onclick="document.getElementById('quickCommandInput').value = ''; document.getElementById('quickCommandInput').focus();" type="button">
+<span class="material-symbols-outlined text-[18px]">mic_none</span>
+</button>
+</div>
+<!-- Filtres en pilules discrètes -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar text-nowrap">
+<button class="filter-pill px-3 py-1.5 rounded-full font-label-md text-label-md bg-primary text-on-primary transition-all shadow-sm" data-category="all">
+        Tous
+      </button>
+<button class="filter-pill px-3 py-1.5 rounded-full font-label-md text-label-md bg-surface-subtle text-on-surface-variant hover:bg-surface-container transition-all" data-category="electro">
+        Électroménager
+      </button>
+<button class="filter-pill px-3 py-1.5 rounded-full font-label-md text-label-md bg-surface-subtle text-on-surface-variant hover:bg-surface-container transition-all" data-category="chauffage">
+        Chauffage
+      </button>
+<button class="filter-pill px-3 py-1.5 rounded-full font-label-md text-label-md bg-surface-subtle text-on-surface-variant hover:bg-surface-container transition-all" data-category="auto">
+        Véhicule
+      </button>
+<button class="filter-pill px-3 py-1.5 rounded-full font-label-md text-label-md bg-surface-subtle text-on-surface-variant hover:bg-surface-container transition-all" data-category="lavage">
+        Lavage
+      </button>
+</div>
+</section>
+<!-- CARTE MAÎTRESSE ("Votre meilleur créneau") -->
+<section class="flex flex-col">
+<div class="bg-surface-card rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+<!-- Halo subtil de sérénité énergétique -->
+<div class="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-secondary-container/40 blur-3xl pointer-events-none"></div>
+<!-- En-tête de carte -->
+<div class="flex items-start justify-between gap-2 relative z-10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-medium">Recommandation du jour</span>
+<h2 class="font-headline-md text-headline-md text-primary mt-0.5">Machine à laver</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cycle Eco 40° • ~1h30</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">local_laundry_service</span>
+</div>
+</div>
+<!-- Heure & Indicateur d'harmonie -->
+<div class="bg-surface-subtle rounded-xl p-space-md flex flex-col gap-2 relative z-10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-energy-pulse text-[18px]">wb_sunny</span>
+<span class="font-title-md text-title-md text-primary font-medium">14 h 00 – 15 h 30</span>
+</div>
+<span class="font-label-sm text-label-sm px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-medium">
+            Aujourd'hui
+          </span>
+</div>
+<!-- Métriques d'impact poétiques -->
+<div class="grid grid-cols-2 gap-space-sm pt-2">
+<div class="flex flex-col bg-surface-card p-3 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">Impact carbone</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-primary font-normal">120 g</span>
+<span class="font-body-sm text-body-sm text-secondary font-medium">CO₂ évités</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary mt-1 flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">trending_down</span>
+              -68% vs le soir
+            </span>
+</div>
+<div class="flex flex-col bg-surface-card p-3 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">Bénéfice estimé</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-primary font-normal">0,25 €</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">économisés</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Tarif optimisé</span>
+</div>
+</div>
+</div>
+<!-- Explication limpide & bienveillante -->
+<div class="flex items-start gap-2.5 text-on-surface-variant relative z-10">
+<span class="material-symbols-outlined text-[18px] text-secondary mt-0.5 shrink-0">nature_people</span>
+<p class="font-body-sm text-body-sm leading-relaxed">
+<strong class="font-medium text-primary">Pourquoi ce créneau ?</strong> Pic de production solaire régionale et éolienne combiné à une demande industrielle modérée. Le réseau respire.
+        </p>
+</div>
+<!-- Actions épurées -->
+<div class="flex flex-col sm:flex-row items-center gap-space-sm pt-1 relative z-10">
+<button class="w-full sm:flex-1 py-3 px-space-md rounded-xl bg-primary text-on-primary font-body-md text-body-md flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-[0.98] hover:bg-primary-container" id="btnPlanifier">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<span>Planifier ce créneau</span>
+</button>
+<button class="w-full sm:w-auto py-3 px-space-md rounded-xl bg-transparent text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors text-center" id="btnAlternatives">
+          Explorer les alternatives
+        </button>
+</div>
+</div>
+</section>
+<!-- Illustration d'atmosphère / Rythme naturel -->
+<section class="rounded-xl overflow-hidden shadow-sm relative h-28 flex items-end p-4">
+<div class="absolute inset-0 bg-cover bg-center brightness-[0.92]" data-alt="Quiet sunlight filtering through translucent linen curtains in a warm Scandinavian minimalist laundry room with clean stone surfaces and green potted plants, soft editorial film photography, peaceful atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATIwB9NEZZtwsq8dQQkAp4rUXwEYdhiRHRJd0VaudQ8qlx6SPHijtge4xJSQ6iWIhp6S8HvC3KIuE8x-jDJlMK_YgVMi9DNDJUfrosUCDImOnc-pCJoRnMr-FEGNGmuEnktP44i8p-wYF5Gp955wDT5vYZzVtMbUf51h0pPvEkIVBBaLnmjTrZwy6zIm56WRWExoyZpixgQmczu3xj05ducYBVB99B-shwf4XtR8gZvwOVjJEXk60W')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent"></div>
+<div class="relative z-10 flex items-center justify-between w-full text-on-primary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-tertiary-fixed">bedtime_off</span>
+<span class="font-body-sm text-body-sm">Prochain pic d'intensité carbone évité à 19h00</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-card/20 backdrop-blur-md px-2 py-0.5 rounded-full">Sérénité</span>
+</div>
+</section>
+<!-- SECTION "Créneaux alternatifs & Faisabilité" -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-primary">Créneaux alternatifs &amp; Faisabilité</h3>
+<span class="font-label-sm text-label-sm text-secondary">2 choix</span>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- Option 1: Solaire Pur -->
+<div class="bg-surface-card rounded-xl p-space-md shadow-sm flex flex-col gap-2 transition-all hover:shadow-md">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5 text-amber-hour">
+<span class="material-symbols-outlined text-[16px]">solar_power</span>
+<span class="font-label-sm text-label-sm uppercase font-semibold">Option A • Solaire Pur</span>
+</div>
+<span class="font-title-md text-title-md text-primary mt-0.5">12 h 30 – 14 h 00</span>
+</div>
+<span class="font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-medium">
+            + Écologique
+          </span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-body-sm text-body-sm pt-1">
+<span class="flex items-center gap-1 text-secondary font-medium">
+<span class="material-symbols-outlined text-[16px]">eco</span>
+            135 g CO₂ évités
+          </span>
+<span class="text-on-surface-variant/40">•</span>
+<span>+0,28 € d'économie</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<p class="font-label-md text-label-md text-on-surface-variant/80 italic">
+            Idéal si vous êtes sur place avant midi pour étendre le linge.
+          </p>
+<button class="px-3 py-1.5 rounded-lg bg-surface-subtle text-primary font-label-md text-label-md hover:bg-surface-container transition-colors">
+            Choisir
+          </button>
+</div>
+</div>
+<!-- Option 2: Nuit Sereine -->
+<div class="bg-surface-card rounded-xl p-space-md shadow-sm flex flex-col gap-2 transition-all hover:shadow-md">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">nights_stay</span>
+<span class="font-label-sm text-label-sm uppercase font-semibold">Option B • Nuit Sereine</span>
+</div>
+<span class="font-title-md text-title-md text-primary mt-0.5">02 h 00 – 03 h 30</span>
+</div>
+<span class="font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-surface-subtle text-on-surface-variant font-medium">
+            Différé auto
+          </span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant font-body-sm text-body-sm pt-1">
+<span class="flex items-center gap-1 text-secondary font-medium">
+<span class="material-symbols-outlined text-[16px]">eco</span>
+            90 g CO₂ évités
+          </span>
+<span class="text-on-surface-variant/40">•</span>
+<span>+0,22 € d'économie</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<p class="font-label-md text-label-md text-on-surface-variant/80 italic">
+            Départ silencieux pendant le sommeil. Intensité carbone moyenne.
+          </p>
+<button class="px-3 py-1.5 rounded-lg bg-surface-subtle text-primary font-label-md text-label-md hover:bg-surface-container transition-colors">
+            Choisir
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION "Vue d'ensemble du foyer" (Cartes de collection façon mymind) -->
+<section class="flex flex-col gap-space-sm pt-space-xs">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-primary">Vue d'ensemble du foyer</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Temps réel</span>
+</div>
+<!-- Mosaïque de cartes calmes -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<!-- Mini-carte 1: Mix Électrique Actuel -->
+<div class="bg-surface-card rounded-xl p-space-md shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Mix Actuel</span>
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+</div>
+<div class="my-auto py-1">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-primary font-normal">38</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">g CO₂/kWh</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Très vert</span>
+</div>
+</div>
+<!-- Jauge d'harmonie inline SVG -->
+<div class="w-full bg-surface-container-low rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 86%;"></div>
+</div>
+</div>
+<!-- Mini-carte 2: Objectif de la semaine -->
+<div class="bg-surface-card rounded-xl p-space-md shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex items-center justify-between text-secondary">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Rituel hebdo</span>
+<span class="material-symbols-outlined text-[18px]">spa</span>
+</div>
+<div class="my-auto py-1">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-primary font-normal">4 <span class="text-on-surface-variant font-light text-body-md">/ 5</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Gestes synchronisés réussis
+          </p>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-surface-container"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-auto">Encore 1</span>
+</div>
+</div>
+<!-- Mini-carte 3: Prochaine charge -->
+<div class="bg-surface-card rounded-xl p-space-md shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex items-center justify-between text-energy-pulse">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Automatisation</span>
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+</div>
+<div class="my-auto py-1">
+<span class="font-title-md text-title-md text-primary font-medium">Ballon d'eau</span>
+<div class="flex items-center gap-1.5 mt-0.5 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+<span>Optimisé à 13h15</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-subtle px-2 py-1 rounded self-start">
+          Pilotage silencieux actif
+        </span>
+</div>
+</div>
+</section>
+<!-- Pensée du soir / Citation calme -->
+<section class="bg-surface-subtle rounded-xl p-space-md flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-card flex items-center justify-center text-secondary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">wb_twilight</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed italic">
+      « Consommer l’énergie au fil de la brise et du soleil, sans précipitation, comme un rythme naturel. »
+    </p>
+</section>
+</div>
+<script>
+  // Micro-interaction : feedback doux au clic sur planifier
+  const btnPlanifier = document.getElementById('btnPlanifier');
+  if (btnPlanifier) {
+    btnPlanifier.addEventListener('click', function() {
+      const originalText = this.innerHTML;
+      this.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span><span>Créneau réservé</span>';
+      this.classList.replace('bg-primary', 'bg-secondary');
+      setTimeout(() => {
+        this.innerHTML = originalText;
+        this.classList.replace('bg-secondary', 'bg-primary');
+      }, 2500);
+    });
+  }
+
+  // Micro-interaction : bascule des pilules de filtre
+  const pills = document.querySelectorAll('.filter-pill');
+  pills.forEach(pill => {
+    pill.addEventListener('click', function() {
+      pills.forEach(p => {
+        p.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+        p.classList.add('bg-surface-subtle', 'text-on-surface-variant');
+      });
+      this.classList.remove('bg-surface-subtle', 'text-on-surface-variant');
+      this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+    });
+  });
+
+  // Défilement doux vers alternatives
+  const btnAlternatives = document.getElementById('btnAlternatives');
+  if (btnAlternatives) {
+    btnAlternatives.addEventListener('click', function() {
+      window.scrollBy({ top: 220, behavior: 'smooth' });
+    });
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-canvas/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(27,56,43,0.03)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-space-sm max-w-md mx-auto"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 transition-colors text-primary font-semibold" data-path="moments" href="#"><span class="material-symbols-outlined text-[22px]">auto_awesome</span><span class="font-label-sm text-label-sm">Moments</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant transition-colors hover:text-primary" data-path="planning" href="#"><span class="material-symbols-outlined text-[22px]">calendar_today</span><span class="font-label-sm text-label-sm">Planning</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant transition-colors hover:text-primary" data-path="appareils" href="#"><span class="material-symbols-outlined text-[22px]">devices</span><span class="font-label-sm text-label-sm">Appareils</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant transition-colors hover:text-primary" data-path="bilan" href="#"><span class="material-symbols-outlined text-[22px]">eco</span><span class="font-label-sm text-label-sm">Bilan</span></a></div></nav></body></html>

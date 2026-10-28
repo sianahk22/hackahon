@@ -1,0 +1,42 @@
+/* Espace collectivité : institutionnel, carte au centre. */
+.theme-collectivite h1 { font-size: 30px; line-height: 36px; }
+.theme-collectivite h2 { font-size: 22px; }
+.c-top { position: sticky; top: 0; z-index: 30; background: var(--primary); color: #E6EEF2; }
+.c-top .serif, .c-top .ms { color: #E6EEF2 !important; }
+.c-top span[style*="surface-2"] { background: rgba(255, 255, 255, .12) !important; }
+.c-top-in { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.c-org { font-size: 13px; color: #B9CAD3; padding-left: 18px; border-left: 1px solid rgba(255, 255, 255, .2); }
+.c-more { display: flex; gap: 4px; flex-wrap: wrap; }
+.c-more a { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 8px; color: #C8D6DE; text-decoration: none; font-size: 13px; }
+.c-more a:hover, .c-more a[aria-current="page"] { background: rgba(255, 255, 255, .1); color: #fff; }
+.c-tabs { max-width: 1440px; margin: 0 auto; padding: 0 16px; display: flex; gap: 2px; overflow-x: auto; }
+.c-tabs a { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; color: #C8D6DE; text-decoration: none; font-weight: 500; font-size: 14px; border-bottom: 3px solid transparent; white-space: nowrap; }
+.c-tabs a:hover { color: #fff; }
+.c-tabs a[aria-current="page"] { color: #fff; border-bottom-color: #F2B544; }
+.c-main { max-width: 1440px; margin: 0 auto; padding: 24px; display: grid; gap: 18px; }
+
+.c-twin { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; }
+.c-twin-map { position: relative; }
+.c-map-wrap { position: relative; height: min(70vh, 680px); min-height: 420px; border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--border); background: #E7ECEF; }
+.c-map { position: absolute; inset: 0; width: 100%; height: 100%; } /* MapLibre impose position: relative : on fixe la taille explicitement */
+.c-map-msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); padding: 24px; text-align: center; }
+.c-map-hint { position: absolute; left: 12px; top: 12px; z-index: 2; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; border-radius: 10px; background: var(--primary); color: #fff; font-size: 13px; box-shadow: var(--shadow); max-width: calc(100% - 80px); }
+.c-map-hint.subtle { background: rgba(255, 255, 255, .92); color: var(--ink-2); }
+.c-panel { display: grid; gap: 18px; align-content: start; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 16px; max-height: min(70vh, 680px); overflow: auto; }
+.c-sel { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 36px; padding: 6px 10px; border: 0; border-radius: 8px; background: transparent; cursor: pointer; text-align: left; font-size: 14px; color: var(--ink); }
+.c-sel:hover { background: var(--subtle); }
+.c-sel.on { background: var(--primary); color: #fff; }
+.c-sel.on .ms, .c-sel.on .muted { color: #fff; }
+.c-sel .pill { margin-left: auto; }
+.c-sub { padding-left: 18px; display: grid; }
+.c-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.c-cat { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 12px; cursor: pointer; }
+.c-cat i, .c-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.c-cat[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.c-devlist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 4px; }
+.c-devlist .c-sel { flex-wrap: wrap; }
+.c-devlist .c-sel .xs { width: 100%; padding-left: 17px; }
+@media (max-width: 1000px) { .c-twin { grid-template-columns: minmax(0, 1fr); } .c-panel { max-height: none; } }
+@media (max-width: 640px) { .c-main { padding: 16px; } .c-top-in { padding: 10px 16px; } .c-org { display: none; } .c-map-wrap { height: 58vh; min-height: 340px; } }
+.c-logout { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .25); background: transparent; color: #E6EEF2; font-size: 13px; cursor: pointer; }
+.c-logout:hover { background: rgba(255, 255, 255, .1); }

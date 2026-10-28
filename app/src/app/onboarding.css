@@ -1,0 +1,9 @@
+.onb { display: grid; place-items: start center; padding: 40px 20px 60px; }
+.onb-center { display: grid; place-items: center; }
+.onb-col { width: min(560px, 100%); display: grid; gap: 18px; }
+.onb-title { font-size: 34px; line-height: 40px; letter-spacing: -.02em; }
+.onb-choices { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+.onb-choice { display: grid; gap: 6px; cursor: pointer; border: 1px solid var(--border); transition: border-color .15s, box-shadow .15s; }
+.onb-choice .ms { color: var(--sage); }
+.onb-choice.on { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.onb-choice:focus-within { outline: 2px solid var(--teal); outline-offset: 2px; }

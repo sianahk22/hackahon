@@ -71,6 +71,19 @@ Un prototype web interactif avec 4 interfaces :
 
 *Les prix sont des hypothèses de travail.*
 
+## L'application
+
+Le code se trouve dans [`app/`](app/) : React, Vite, TypeScript, MapLibre et Supabase (optionnel).
+
+```bash
+cd app
+npm install
+npm run dev     # http://localhost:5173
+npm test
+```
+
+Détails, architecture et statut de chaque donnée (réelle, estimée, simulée) : [`app/README.md`](app/README.md).
+
 ## L'équipe
 
 - Anaïs
